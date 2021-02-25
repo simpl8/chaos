@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, jsonify
 import json
-from flask_cors import cross_origin
+#from flask_cors import cross_origin
 from loguru import logger
 #from views import app
 from flask_sqlalchemy import SQLAlchemy
@@ -40,23 +40,29 @@ def index():
 
 @app.route("/api/register", methods=["get", "post"])
 def register():
+    logger.info(request.method)
     if request.method == "GET":
         return render_template("login.html")
     elif request.method == "POST":
         email = request.json.get("email")
         password = request.json.get("password")
         verify_password = request.json.get("verifyPassword")
-        if password == verify_password:
+        if password != "" and verify_password != "" and password == verify_password:
             # 注册信息
             reg = User(email=email, password=password)
             db.session.add(reg)
             db.session.commit()
-            msg = {"code": 0, "msg": "注册成功"}
+            msg = {"code": 0, "message": "注册成功"}
+            logger.info(msg)
+            return jsonify(msg)
+        elif password == "" or verify_password == "":
+            msg = {'code': 1, "message": "密码不能为空"}
+            logger.debug(msg)
             return jsonify(msg)
         else:
-            err_msg = {"code": 1, "msg": "输入密码不一致,请重新输入"}
-            logger.debug(err_msg)
-            return jsonify(err_msg)
+            msg = {"code": 2, "message": "输入密码不一致,请重新输入"}
+            logger.debug(msg)
+            return jsonify(msg)
 
 
 @app.route("/api/login", methods=['get', 'post'])
