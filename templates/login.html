@@ -20,14 +20,16 @@
   }
   input {
     border-radius: 3px;
-    height: 25px;
+    height: 30px;
     width: 250px;
     margin: 2mm 2mm 2mm 2mm;
     border: 1px solid gray;
   }
   input.btn {
+    position: relative;
+    left: -3px;
     border-radius: 3px;
-    height: 25px;
+    height: 30px;
     width: 100px;
     background-color: #2894FF;
   }
@@ -42,29 +44,37 @@
     cursor: pointer;
   }
   #app {
-    margin: 200px auto;
+    margin: 3% auto;
+  }
+  /* 配合v-show使用，解决刷新的瞬间显示了隐藏的内容 */
+  [v-cloak] {
+    display: none;
   }
   </style>
 </head>
 <body>
 <div id="app">
-  <div class="login-wrap" v-show="showLogin">
+  <div>
+    <img src="../static/Images/chaos.png">
+  </div>
+  <div class="login-wrap" v-show="showLogin" v-cloak>
     <h3>登录</h3><br>
-    <input type="email" placeholder="请输入邮箱" /><br>
-    <input type="password" placeholder="请输入密码" /><br>
+    <input type="email" placeholder="请输入邮箱" v-model="loginEmail" /><br>
+    <input type="password" placeholder="请输入密码" v-model="loginPassword" /><br>
     <input class="btn" type="submit" @click="login" value="登录"/>
-    <span @click="ToRegister">没有账号？马上注册</span>
+    <span @click="ToRegister">没有账号？马上注册</span><br>
+    <label class="msg" v-show="showTip" v-cloak>[[ msg.message ]]</label>
   </div>
 
-  <div class="register-wrap" v-show="showRegister">
+  <div class="register-wrap" v-show="showRegister" v-cloak>
     <h3>注册</h3><br>
     <input type="email" name="email" placeholder="请输入邮箱" v-model="email" /><br>
     <input type="password" name="password" placeholder="请输入密码" v-model="password" /><br>
     <input type="password" name="verifyPassword" placeholder="确认密码" v-model="verifyPassword" /><br>
     <input class="btn" type="submit" @click="register" value="注册"/>
     <span @click="ToLogin">已有账号？马上登录</span><br>
-    <label class="msg" v-show="showTip">[[ msg.message ]]</label>
-    <label class="error_msg" v-show="showError">[[ msg.message ]]</label>
+    
+    <label class="error_msg" v-show="showError" v-cloak>[[ msg.message ]]</label>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -77,6 +87,8 @@
             showRegister: false,
             showTip: false,
             showError: false,
+            loginEmail: "",
+            loginPassword: "",
             email: "",
             password: "",
             verifyPassword: "",
@@ -90,12 +102,21 @@
             ToRegister() {
                 this.showRegister = true
                 this.showLogin = false
+                this.showError = false
             },
             ToLogin() {
                 this.showLogin = true
                 this.showRegister = false
+                this.showError = false
             },
             login() {
+              axios.post("/api/login", {
+                email: this.loginEmail,
+                password: this.loginPassword
+              }).then((response)=>{
+                this.msg = response.data
+                console.log(msg)
+              })
                 
             },
             register() {
@@ -106,8 +127,11 @@
               }).then((response)=>{
                 this.msg = response.data
                 // console.log("msg信息", this.msg.data.code)
+                // 注册成功，跳转登录框
                 if (this.msg.code === 0) {
                   this.showTip = true
+                  this.showLogin = true
+                  this.showRegister = false
                 }  else if (this.msg.code === 2) {
                   this.showError = true
                 }

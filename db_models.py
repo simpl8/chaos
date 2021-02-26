@@ -1,5 +1,7 @@
 from views import app
 from flask_sqlalchemy import SQLAlchemy
+from aes import PrpCrypt
+from loguru import logger
 
 
 class DbConfig:
@@ -18,7 +20,7 @@ class User(db.Model):
     __tablename__ = "User"
     id = db.Column(db.Integer, primary_key=True, comment="ID")
     email = db.Column(db.String(64), index=True, comment="注册邮箱")
-    password = db.Column(db.String(64), nullable=False, comment="密码")
+    password = db.Column(db.String(128), nullable=False, comment="密码")
 
 
     def __repr__(self):
@@ -26,5 +28,14 @@ class User(db.Model):
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
+    content = PrpCrypt("Suhang1908261908")
+    email = db.session.execute("select password from User where email='912958762@qq.com'").fetchall()
+    db.session.commit()
+    logger.info(email)
+    logger.info(content.encrypt("Suhang1908"))
+
+    # password = AES.decrypt(b_email)
+    # logger.info(password)
+    # with app.app_context():
+    #     db.create_all()
+        #db.drop_all()
