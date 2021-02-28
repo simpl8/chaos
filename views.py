@@ -44,7 +44,7 @@ def index():
 def register():
     logger.info(request.method)
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template("users/login.html")
     elif request.method == "POST":
         email = request.json.get("email")
         password = request.json.get("password")

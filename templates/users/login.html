@@ -55,7 +55,7 @@
 <body>
 <div id="app">
   <div>
-    <img src="../static/Images/chaos.png">
+    <img src="../../static/Images/chaos.png">
   </div>
   <div class="login-wrap" v-show="showLogin" v-cloak>
     <h3>登录</h3><br>
@@ -115,9 +115,10 @@
                 password: this.loginPassword
               }).then((response)=>{
                 this.msg = response.data
-                console.log(msg)
+                if (this.msg.code === 0){
+                  window.location.href="index"
+                }
               })
-                
             },
             register() {
               axios.post("/api/register", {
@@ -135,6 +136,8 @@
                 }  else if (this.msg.code === 2) {
                   this.showError = true
                 }
+              }).catch((error)=> {
+                  console.log(error.response)
               })
             }
         }

@@ -7,15 +7,14 @@ class PrpCrypt:
 
     def __init__(self, key):
         self.key = key.encode('utf-8')
-        self.mode = AES.MODE_CBC
-        self.iv = Random.new().read(AES.block_size)
+        self.mode = AES.MODE_ECB
 
     # 加密函数，如果text不足16位就用空格补足为16位，
     # 如果大于16当时不是16的倍数，那就补足为16的倍数。
     def encrypt(self, text):
         text = text.encode('utf-8')
 
-        cryptor = AES.new(self.key, self.mode, self.iv)
+        cryptor = AES.new(self.key, self.mode)
         # 这里密钥key 长度必须为16（AES-128）,
         # 24（AES-192）,或者32 （AES-256）Bytes 长度
         # 目前AES-128 足够目前使用
@@ -37,7 +36,7 @@ class PrpCrypt:
 
     # 解密后，去掉补足的空格用strip() 去掉
     def decrypt(self, text):
-        cryptor = AES.new(self.key, self.mode, self.iv)
+        cryptor = AES.new(self.key, self.mode)
         plain_text = cryptor.decrypt(a2b_hex(text))
         # return plain_text.rstrip('\0')
         return bytes.decode(plain_text).rstrip('S')
@@ -47,6 +46,6 @@ if __name__ == '__main__':
       pc = PrpCrypt('Suhang1908261908') # 初始化密钥
       data = "Suhang1908"
       e = pc.encrypt(data) # 加密
-      d = pc.decrypt(e).encode() # 解密
+      d = pc.decrypt("c8ad139566b837847ddaa879bfcd2d09").encode() # 解密
       print("加密:", e, type(e))
       print("解密:", d, type(d))

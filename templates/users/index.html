@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style type="text/css">
+    ul{
+      font-size:17px;
+      color:rgb(192, 192, 192);
+      list-style:none;
+      cursor:pointer;
+    }
+    ul.head{
+      color: #2894FF;
+    }
+    li{
+      text-align:left;
+      font-size:15px;
+      color:rgb(128, 128, 128);
+      list-style:none;
+      cursor:pointer;
+      padding-left:12px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div >
+    <ul class="head" @click="showLi" >测试工具</ul>
+    <ul class="tools" v-if="isShow" @mousemove="onShow">
+      <li>测试工具1</li>
+      <li>测试工具2</li>
+      <li>测试工具3</li>
+    </ul>
+    <ul class="head">测试工具</ul>
+    <ul class="tools" >
+      <li>测试工具1</li>
+      <li>测试工具2</li>
+      <li>测试工具3</li>
+    </ul>
+  </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        delimiters:["[[", "]]"],
+        data: {
+            message: 'Hello Vue',
+            isShow: false
+        },
+        methods: {
+            showLi() {
+                return this.isShow = !this.isShow
+            },
+        }
+    })
+</script>
+</body>
+</html>
