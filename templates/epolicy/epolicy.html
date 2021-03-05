@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>电子保单</title>
+    <style type="text/css">
+      input.policy {
+        border-radius: 3px;
+        height: 25px;
+        width: 200px;
+        margin: 2mm 2mm 2mm 2mm;
+        border: 1px solid gray;
+      }
+      select.channel {
+        border-radius: 3px;
+        height: 25px;
+        width: 206px;
+        margin: 2mm 2mm 2mm 2mm;
+        border: 1px solid gray;
+      }
+      input.submit {
+        border-radius: 3px;
+        height: 25px;
+        width: 100px;
+        background-color: #2894FF;
+        margin: 0 0 2mm 2mm
+      }
+      select {
+        border-radius: 3px;
+        height: 25px;
+        width: 50px;
+        margin: 2mm 0 0 2mm
+      }
+      label {
+        margin: 2mm 0 0 2mm
+      }
+      p {
+        margin: 2mm 0 0 2mm;
+        cursor: pointer;
+        color:crimson;
+      }
+      .tools{
+        margin-left: 40%;
+        margin-top: 10%
+      }
+    </style>
+  </head>
+  <body>
+    <div id ="app" class="tools">
+      <title>[[ title ]]</title>
+      <label>选择环境：</label><br>
+      <select v-model="env">
+        <option value="test">test</option>
+        <option value="uat">uat</option>
+      </select><br>
+      <input class="policy" type="text" placeholder="请输入保单号" v-model="policyNo" /><br>
+      <!--<input class="channel" type="text" placeholder="请输入保单渠道来源" v-model="channel" /><br>-->
+      <select class="channel" v-model="searchSource">
+        <option value="app">app</option>
+        <option value="other">other</option>
+      </select><br>
+      <input class="submit" type="submit" value="查询" @click="query"><br>
+      <label>电子保单链接(点击链接进行复制):</label>
+      <p class="copyUrl" @click="copyText(policyUrl)">[[ policyUrl ]]</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+    <script>
+      const obj ={
+        toastShow: false,
+        toastText: ""
+      }
+      const app = new Vue({
+        el: "#app",
+        data: {
+          title: "毛豆-电子保单",
+          env: "test",
+          policyNo: "",
+          channel: "",
+          policyUrl: "",
+          searchSource: "app"
+        },
+        delimiters:["[[", "]]"],
+        methods: {
+          copyText (content) {
+            let url = content
+            let oninput = document.createElement('input')
+            oninput.value = url
+            document.body.appendChild(oninput)
+            oninput.select()// 选择对象
+            // console.log(465464, oninput.value)
+            document.execCommand('Copy')// 执行浏览器复制命令
+            //message.success('复制成功！')
+            alert("复制成功")
+            oninput.remove()
+          },
+          query() {
+            axios.post("/api/e_policy_query", {
+              env: this.env,
+              policyNo: this.policyNo,
+              channel: this.searchSource,
+            }).then((response)=> {
+              if (response.data.code === -1) {
+                this.policyUrl = response.data.message
+              } else {
+                this.policyUrl = response.data.content.url
+              }
+              //console.log(this.policyUrl)
+            })
+          }
+        }
+      })
+    </script>  
+  </body>
+  
+</html>
