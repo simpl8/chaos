@@ -7,7 +7,9 @@ app.config.from_object(Config)
 
 
 from users.views import users_blue
-app.register_blueprint(users_blue, )
+from epolicy.views import e_policy
+app.register_blueprint(users_blue)
+app.register_blueprint(e_policy)
 
 
 

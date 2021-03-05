@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tools</title>
+  <style type="text/css">
+    input.policy {
+      border-radius: 3px;
+      height: 25px;
+      width: 200px;
+      margin: 2mm 2mm 2mm 2mm;
+      border: 1px solid gray;
+    }
+    select.channel {
+      border-radius: 3px;
+      height: 25px;
+      width: 200px;
+      margin: 2mm 2mm 2mm 2mm;
+      border: 1px solid gray;
+    }
+    input.submit {
+      border-radius: 3px;
+      height: 25px;
+      width: 100px;
+      background-color: #2894FF;
+      margin: 0 0 2mm 2mm
+    }
+    select {
+      border-radius: 3px;
+      height: 25px;
+      width: 50px;
+      margin: 2mm 0 0 2mm
+    }
+    label {
+      margin: 2mm 0 0 2mm
+    }
+    p {
+      margin: 2mm 0 0 2mm;
+      cursor: pointer;
+      color: crimson;
+    }
+    .tools{
+      margin-left: 35%;
+      margin-top: 10%
+    }
+  </style>
+  <script>
+  copyInnerTextOfCell = (event) => {
+    let innerText = event.target.innerText;
+    var tmpInput = document.createElement("input");
+    document.body.appendChild(tmpInput);
+    tmpInput.value = innerText;
+    tmpInput.select();
+    document.execCommand("cut"); // copy
+    tmpInput.remove();
+    alert("复制成功！");
+  }
+  </script>
+</head>
+<body>
+  <div class="tools">
+    <form action="/e_policy_query" method="post">
+      <label>选择环境：</label><br>
+      <select name="env">
+        <option value="test">test</option>
+        <option value="uat">uat</option>
+      </select><br>
+      <input class="policy" type="text" name="policyNo" placeholder="请输入保单号"  required/><br>
+      <select class="channel" name="channel">
+        <option value="app">app</option>
+        <option value="other">other</option>
+      </select><br>
+      <input class="submit" type="submit" value="查询" /><br>
+      <label>电子保单链接(点击链接进行复制):</label>
+      <p onclick="copyInnerTextOfCell(event)">{{ msg }}</p>
+    </form>
+  </div>
+</body>
+</html>

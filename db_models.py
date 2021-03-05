@@ -28,16 +28,16 @@ class User(db.Model):
 
 
 if __name__ == "__main__":
-    content = PrpCrypt("Suhang1908261908")
-    email = db.session.execute("select email, password from User where email='simple@126.com'").fetchall()
-    db.session.commit()
-    db_email, db_password = email[0][0], email[0][1]
-    logger.info(db_email)
-    logger.info(content.decrypt(db_password))
+    # content = PrpCrypt("Suhang1908261908")
+    # email = db.session.execute("select email, password from User where email='simple@126.com'").fetchall()
+    # db.session.commit()
+    # db_email, db_password = email[0][0], email[0][1]
+    # logger.info(db_email)
+    # logger.info(content.decrypt(db_password))
     
 
     # password = AES.decrypt(b_email)
     # logger.info(password)
-    # with app.app_context():
-    #     db.create_all()
+    with app.app_context():
+        db.create_all()
         #db.drop_all()

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>demon</title>
+  <style>
+
+  </style>
+</head>
+<body>
+  <div>
+    <form action="/api/hello_form" method="post">
+      <input name="firArg" type="text" placeholder="请输入第一个参数" /><br>
+      <input name="secArg" type="text" placeholder="请输入第二个参数" /><br>
+      <input type="submit" value="提交" /><br>
+      <span>接收数据1-------{{ args_1 }}</span><br>
+      <span>接收数据2-------{{ args_2 }}</span>
+    </form>
+  </div>
+</body>
+</html>
